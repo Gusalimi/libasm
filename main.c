@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 size_t  ft_strlen(char *s);
 char    *ft_strcpy(char *dest, char *src);
 int     ft_strcmp(char *s1, char *s2);
 ssize_t ft_write(int fd, const void *buf, size_t count);
+ssize_t ft_read(int fd, void *buf, size_t count);
 
 int main(int argc, char **argv)
 {
@@ -66,5 +68,30 @@ int main(int argc, char **argv)
     //     res2 = ft_write(1, NULL, ft_strlen(s));
     //     printf("std: %ld | ft: %ld\n", res1, res2);
     // }
+
+    // ft_read
+    {
+        printf("\n=== read ===\n");
+        int fd = open("test.txt", O_RDONLY);
+        char buffer1[11];
+        char buffer2[11];
+        ssize_t res1 = read(fd, buffer1, 10);
+        lseek(fd, 0, SEEK_SET);
+        ssize_t res2 = ft_read(fd, buffer2, 10);
+        printf("std: %ld | ft: %ld\n", res1, res2);
+        buffer1[res1] = '\0';
+        buffer2[res2] = '\0';
+        printf("buffer1: [%s] | buffer2: [%s]\n", buffer1, buffer2);
+
+        res1 = read(400, buffer1, 10);
+        res2 = ft_read(400, buffer2, 10);
+        printf("std: %ld | ft: %ld\n", res1, res2);
+        if (res1 != -1)
+            buffer1[res1] = '\0';
+        if (res2 != -1)
+            buffer2[res2] = '\0';
+        if (res1 != -1 && res2 != -1)
+            printf("buffer1: [%s] | buffer2: [%s]\n", buffer1, buffer2);
+    }
     return (0);
 }
