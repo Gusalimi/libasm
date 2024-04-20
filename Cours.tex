@@ -1,0 +1,232 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codeblue}{rgb}{0,0,1}
+\definecolor{codered}{rgb}{0.8,0,0}
+
+\lstset{
+    language=[x86masm]Assembler,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{codered},
+    stringstyle=\color{codepurple},
+    commentstyle=\color{codegreen},
+    numberstyle=\tiny\color{codeblue},
+    frame=single,
+    breaklines=true,
+    columns=fullflexible,
+    numbers=left,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\begin{document}
+
+\title{Basics of 64-bit NASM Assembly Language}
+\author{}
+\date{}
+\maketitle
+
+\section{Introduction to NASM and Assembly Language}
+
+\subsection{What is NASM?}
+NASM (Netwide Assembler) is an assembler and disassembler for the x86 architecture, including 32-bit and 64-bit variants. NASM supports a variety of output formats, and it is known for its simplicity and flexibility.
+
+\subsection{Overview of Assembly Language}
+Assembly language is a low-level programming language that is closely related to machine language. It allows direct control over the hardware, making it powerful for writing efficient code. Assembly language uses symbolic instructions to represent machine instructions.
+
+\subsection{Why Learn NASM and Assembly?}
+\begin{itemize}
+    \item \textbf{Efficiency}: Assembly language offers fine-grained control over hardware, leading to highly optimized and efficient code.
+    \item \textbf{Understanding}: Learning assembly helps you understand how high-level code is executed at the machine level.
+    \item \textbf{Debugging}: Knowledge of assembly can aid in debugging complex issues in high-level code.
+\end{itemize}
+
+\section{Setting Up Your Environment}
+
+\subsection{Installing NASM}
+To install NASM, visit the \href{https://www.nasm.us/}{official NASM website} and download the appropriate version for your operating system. Follow the installation instructions provided on the website.
+
+\subsection{Choosing an Editor and Other Tools}
+\begin{itemize}
+    \item Choose a text editor with syntax highlighting and other features to make coding in assembly easier. Examples include Visual Studio Code, Sublime Text, and Atom.
+    \item A linker is needed to link the object files created by NASM into an executable. Common linkers include \texttt{ld} on Linux and \texttt{link} on Windows.
+\end{itemize}
+
+\subsection{Compiling and Running NASM Code}
+\begin{enumerate}
+    \item Write your NASM code in a file with the extension \texttt{.s} (e.g., \texttt{program.s}).
+    \item Compile the NASM file into an object file (\texttt{.o} or \texttt{.obj}) using the NASM command:
+    \begin{lstlisting}
+nasm -f elf64 program.s -o program.o
+    \end{lstlisting}
+    \item Link the object file into an executable using a linker command (e.g., \texttt{ld} on Linux or \texttt{link} on Windows).
+    \item Run the resulting executable file.
+\end{enumerate}
+
+\section{Basic NASM Syntax}
+
+\subsection{Code Sections}
+NASM code is divided into sections:
+\begin{itemize}
+    \item \texttt{.data}: This section contains data and variables that your program may use.
+    \item \texttt{.bss}: This section contains uninitialized data.
+    \item \texttt{.text}: This section contains executable code.
+\end{itemize}
+
+\subsection{Comments}
+Comments in NASM start with a semicolon (\texttt{;}), and are ignored by the assembler. Comments are important for code readability and documentation.
+
+\subsection{Directives and Labels}
+\begin{itemize}
+    \item \textbf{Directives}: Provide additional information to the assembler (e.g., \texttt{section}, \texttt{global}, \texttt{extern}).
+    \item \textbf{Labels}: Mark locations in code for jump instructions or reference by other parts of the code. For instance:
+    \begin{lstlisting}
+my_label:
+    ; code here
+    \end{lstlisting}
+\end{itemize}
+
+\section{Data Types and Registers}
+
+\subsection{Data Types}
+NASM supports various data types:
+\begin{itemize}
+    \item \texttt{db}: Define a byte of data.
+    \item \texttt{dw}: Define a word (2 bytes) of data.
+    \item \texttt{dd}: Define a double word (4 bytes) of data.
+    \item \texttt{dq}: Define a quad word (8 bytes) of data.
+\end{itemize}
+
+\subsection{Registers}
+Registers are storage locations within the CPU for holding data temporarily during program execution.
+\begin{itemize}
+    \item General-purpose registers include: \texttt{rax}, \texttt{rbx}, \texttt{rcx}, \texttt{rdx}, \texttt{rsi}, \texttt{rdi}, and \texttt{rsp}.
+    \item Special-purpose registers include: \texttt{rip} (instruction pointer) and \texttt{rflags} (flags register).
+\end{itemize}
+
+\section{Basic Instructions}
+
+\subsection{Arithmetic Operations}
+Arithmetic operations in NASM include:
+\begin{itemize}
+    \item \texttt{add}: Adds two values together and stores the result.
+    \item \texttt{sub}: Subtracts one value from another.
+    \item \texttt{mul}: Multiplies two values.
+    \item \texttt{div}: Divides one value by another.
+\end{itemize}
+
+Example:
+\begin{lstlisting}
+mov rax, 10
+mov rbx, 20
+add rax, rbx ; rax = rax + rbx
+\end{lstlisting}
+
+\subsection{Logical Operations}
+Logical operations include:
+\begin{itemize}
+    \item \texttt{and}: Performs a bitwise AND operation on two values.
+    \item \texttt{or}: Performs a bitwise OR operation on two values.
+    \item \texttt{xor}: Performs a bitwise XOR operation on two values.
+\end{itemize}
+
+Example:
+\begin{lstlisting}
+mov rax, 0xF0F0
+mov rbx, 0x0F0F
+and rax, rbx ; rax = rax AND rbx
+\end{lstlisting}
+
+\subsection{Comparison and Branching}
+\texttt{cmp} compares two values and sets flags in the \texttt{rflags} register accordingly. Branching instructions control program flow based on comparisons:
+\begin{itemize}
+    \item \texttt{jmp}: Unconditional jump to a label.
+    \item \texttt{jne}: Jump if not equal.
+    \item \texttt{je}: Jump if equal.
+\end{itemize}
+
+Example:
+\begin{lstlisting}
+mov rax, 5
+mov rbx, 10
+cmp rax, rbx
+jne not_equal
+je equal
+
+not_equal:
+    ; Code for not equal case
+equal:
+    ; Code for equal case
+\end{lstlisting}
+
+\section{Memory Management}
+
+\subsection{Stack and Stack Operations}
+The stack is a special area of memory used for storing temporary data such as function arguments and return addresses. Stack operations include:
+\begin{itemize}
+    \item \texttt{push}: Pushes a value onto the stack.
+    \item \texttt{pop}: Pops a value from the stack.
+\end{itemize}
+
+Example:
+\begin{lstlisting}
+push rax ; Push rax onto the stack
+pop rbx  ; Pop the top value of the stack into rbx
+\end{lstlisting}
+
+\subsection{Accessing Memory with Registers}
+Registers can be used to access memory directly. For example, \texttt{rax} can store a memory address.
+
+\subsection{Addressing Modes}
+NASM supports various addressing modes such as:
+\begin{itemize}
+    \item \textbf{Direct}: Referencing a memory location directly by its address.
+    \item \textbf{Indirect}: Referencing a memory location through a register.
+    \item \textbf{Indexed}: Referencing a memory location using a base address plus an index.
+\end{itemize}
+
+Example:
+\begin{lstlisting}
+mov rax, [rbx] ; Access memory at address stored in rbx
+\end{lstlisting}
+
+\section{I/O and System Calls}
+
+\subsection{Input and Output}
+Input and output are typically performed using system calls. For example, specifying the standard input (keyboard) or output (console).
+
+\subsection{System Calls}
+System calls are used to interact with the operating system. Example of writing a message to the console:
+
+\begin{lstlisting}
+section .data
+    msg db 'Hello, world!', 0
+
+section .text
+    global _start
+
+_start:
+    ; Write message
+    mov rax, 1       ; syscall number for write
+    mov rdi, 1       ; file descriptor for stdout
+    mov rsi, msg     ; address of the message
+    mov rdx, 13      ; length of the message
+    syscall
+
+    ; Exit
+    mov rax, 60      ; syscall number for exit
+    xor rdi, rdi     ; status code 0
+    syscall
+\end{lstlisting}
+
+\section{Conclusion}
+This is a basic overview of NASM assembly language, including some key concepts and examples. As you continue learning, you will gain more knowledge and experience in assembly programming. Keep practicing and experimenting with writing NASM code to improve your skills.
+
+\end{document}
+
